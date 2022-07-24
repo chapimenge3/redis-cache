@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'event',
 
     'rest_framework',
+    'debug_toolbar',
 ]
 
 MIDDLEWARE = [
@@ -51,6 +52,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware'
 ]
 
 ROOT_URLCONF = 'caching.urls'
@@ -79,8 +81,15 @@ WSGI_APPLICATION = 'caching.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        # 'ENGINE': 'django.db.backends.sqlite3',
+        # 'NAME': BASE_DIR / 'db.sqlite3',
+        # postgresql
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'blog',
+        'USER': 'userchapi',
+        'PASSWORD': 'chapi145121',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
@@ -134,3 +143,9 @@ CACHES = {
         'LOCATION': 'redis://127.0.0.1:6379',
     }
 }
+
+
+# Debug toolbar config
+INTERNAL_IPS = [
+    '127.0.0.1'
+]
