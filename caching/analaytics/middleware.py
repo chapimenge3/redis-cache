@@ -76,3 +76,6 @@ class TrackerMiddleware:
         track_visitor(request)
 
         return response
+
+def observe_request(request):
+    return True

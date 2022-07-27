@@ -172,5 +172,9 @@ else:
 # Debug toolbar config
 INTERNAL_IPS = [
     '127.0.0.1',
-    'gentle-sands-94947.herokuapp.com'
+    'https://gentle-sands-94947.herokuapp.com/'
 ]
+
+DEBUG_TOOLBAR_CONFIG = {
+    'OBSERVE_REQUEST_CALLBACK': 'analaytics.middleware.observe_request',
+}
