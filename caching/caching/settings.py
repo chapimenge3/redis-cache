@@ -159,6 +159,8 @@ if all(i for i in REDIS_CONFIG.values()):
         }
     }
 else:
+    print('Redis Local is enabled because no Redis credentials were provided')
+    print('Redis config:', REDIS_CONFIG)
     CACHES = {
         'default': {
             'BACKEND': 'django.core.cache.backends.redis.RedisCache',
