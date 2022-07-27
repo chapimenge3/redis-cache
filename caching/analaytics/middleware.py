@@ -29,13 +29,22 @@ def geo_info(ip_address):
     return None
 
 
+def get_client_ip(request):
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[-1].strip()
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    return ip
+
+
 def track_visitor(request):
     page = str(request.path)
     if 'admin/' in page:
         return None
 
     user_agent = request.headers['User-Agent']
-    ip_address = request.META['REMOTE_ADDR']
+    ip_address = get_client_ip(request)
     user = request.user if request.user.is_authenticated else None
     os = 'Other'
 
@@ -77,6 +86,6 @@ class TrackerMiddleware:
 
         return response
 
+
 def observe_request(request):
-    print('|||||||||||||||--------------------- show request:', request)
     return True

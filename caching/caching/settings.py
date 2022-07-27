@@ -170,10 +170,12 @@ else:
 
 
 # Debug toolbar config
-INTERNAL_IPS = [
-    '127.0.0.1',
-    'https://gentle-sands-94947.herokuapp.com/'
-]
+class AllIPS(list):
+    def __contains__(self, item):
+        return True
+
+INTERNAL_IPS = AllIPS()
+
 
 DEBUG_TOOLBAR_CONFIG = {
     'OBSERVE_REQUEST_CALLBACK': 'analaytics.middleware.observe_request',

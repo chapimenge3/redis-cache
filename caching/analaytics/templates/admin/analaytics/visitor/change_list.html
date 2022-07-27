@@ -1,4 +1,7 @@
-{% extends "admin/change_list.html" %} {% load static %} {% block extrahead %}
+{% extends "admin/change_list.html" %} 
+{% load cache %}
+{% load static %}
+{% block extrahead %}
 {{ block.super }}
 <link
   rel="stylesheet"
@@ -38,12 +41,14 @@
 </script>
 {% endblock %} {% block content %}
 <!-- Render our chart -->
-<div style="width: 100%">
-  <h3 style="text-align: center">Statstics of vistor</h3> 
-  <canvas
-    style="margin-bottom: 30px; width: 60%; height: 50%"
-    id="myChart"
-  ></canvas>
-</div>
+{% cache 500 statstics %}
+  <div style="width: 100%">
+    <h3 style="text-align: center">Statstics of vistor</h3> 
+    <canvas
+      style="margin-bottom: 30px; width: 60%; height: 50%"
+      id="myChart"
+    ></canvas>
+  </div>
+{% endcache %}
 <!-- Render the rest of the ChangeList view -->
 {{ block.super }} {% endblock %}
