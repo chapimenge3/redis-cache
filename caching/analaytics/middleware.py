@@ -78,5 +78,5 @@ class TrackerMiddleware:
         return response
 
 def observe_request(request):
-    print('show request:', request)
+    print('|||||||||||||||--------------------- show request:', request)
     return True
