@@ -1,3 +1,4 @@
+from django.shortcuts import HttpResponse
 from django.http import Http404
 from django.core.cache import cache
 from rest_framework.views import APIView
@@ -8,9 +9,12 @@ from event.models import Event, Guest
 from event.serializers import EventSerializer, GuestSerializer
 
 CACHE_TTL = 60 * 15
-USE_CACHE = False
-INVALIDATE_CACHE = False
-USE_IMPROVED_Query = False
+USE_CACHE = True
+INVALIDATE_CACHE = True
+USE_IMPROVED_Query = True
+
+def index(requests):
+    return HttpResponse('<b>Welcome to Caching with Redis Course!</b>')
 
 class EventList(APIView):
     def get(self, request):
@@ -85,17 +89,17 @@ class GuestList(APIView):
                 return Response(guests)
 
             if USE_IMPROVED_Query:
-                guests = Guest.objects.all().select_related('event')
+                guests = Guest.objects.all().select_related('event')[:10]
             else:
-                guests = Guest.objects.all()
+                guests = Guest.objects.all()[:10]
             serializer = GuestSerializer(guests, many=True)
             cache.set('guests', serializer.data, CACHE_TTL)
             return Response(serializer.data)
 
         if USE_IMPROVED_Query:
-            guests = Guest.objects.all().select_related('event')
+            guests = Guest.objects.all().select_related('event')[:10]
         else:
-            guests = Guest.objects.all()
+            guests = Guest.objects.all()[:10]
         serializer = GuestSerializer(guests, many=True)
         return Response(serializer.data)
 

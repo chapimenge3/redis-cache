@@ -1,0 +1,49 @@
+{% extends "admin/change_list.html" %} {% load static %} {% block extrahead %}
+{{ block.super }}
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.2.1/Chart.min.css"
+/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const ctx = document.getElementById('myChart').getContext('2d');
+
+      const statLabel = {{ stat_label | safe }};
+      const statData = {{ stat_data | safe }};
+
+      const colorSet = {
+        Andorid: '#3DDC84',
+        Iphone: '#555555',
+        Window: '#7FBA00',
+        Linux: '#0a3954',
+        Mac: '#000000',
+        Other: '#16537e'
+      }
+      const chart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+          labels: statLabel,
+          datasets: [
+            {
+              label: '# of Votes',
+              data: statData,
+              backgroundColor: statLabel.map(label => colorSet[label])
+            }
+          ]
+        }
+      })
+
+  });
+</script>
+{% endblock %} {% block content %}
+<!-- Render our chart -->
+<div style="width: 100%">
+  <h3 style="text-align: center">Statstics of vistor</h3> 
+  <canvas
+    style="margin-bottom: 30px; width: 60%; height: 50%"
+    id="myChart"
+  ></canvas>
+</div>
+<!-- Render the rest of the ChangeList view -->
+{{ block.super }} {% endblock %}

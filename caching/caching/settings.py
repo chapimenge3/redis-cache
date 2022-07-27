@@ -9,12 +9,14 @@ https://docs.djangoproject.com/en/4.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
-
+import os
 from pathlib import Path
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+load_dotenv(BASE_DIR / '.env')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
@@ -25,7 +27,7 @@ SECRET_KEY = 'django-insecure-%0n9maq*nel3b&-kr)*p+if(f8r_9_e=p72(01mzy1c=z@!c)x
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -37,8 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
+
     'event',
+    'analaytics',
 
     'rest_framework',
     'debug_toolbar',
@@ -52,7 +55,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware'
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'analaytics.middleware.TrackerMiddleware'
 ]
 
 ROOT_URLCONF = 'caching.urls'
@@ -85,11 +89,11 @@ DATABASES = {
         # 'NAME': BASE_DIR / 'db.sqlite3',
         # postgresql
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'blog',
-        'USER': 'userchapi',
-        'PASSWORD': 'chapi145121',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'NAME': os.getenv('DB_NAME'),
+        'USER': os.getenv('DB_USER'),
+        'PASSWORD': os.getenv('DB_PASSWORD'),
+        'HOST': os.getenv('DB_HOST'),
+        'PORT': os.getenv('DB_PORT'),
     }
 }
 
@@ -135,17 +139,34 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
 # Reddis Cache config
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
-        'LOCATION': 'redis://127.0.0.1:6379',
-    }
+
+REDIS_CONFIG = {
+    'host': os.getenv('REDIS_HOST'),
+    'port': os.getenv('REDIS_PORT'),
+    'password': os.getenv('REDIS_PASSWORD'),
+    'username': os.getenv('REDIS_USERNAME'),
 }
+
+if all(i for i in REDIS_CONFIG.values()):
+    print('Redis Cloud is enabled')
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+            'LOCATION': f'redis://{REDIS_CONFIG["username"]}:{REDIS_CONFIG["password"]}@{REDIS_CONFIG["host"]}:{REDIS_CONFIG["port"]}/0',
+        }
+    }
+else:
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+            'LOCATION': 'redis://localhost:6379/0',
+        }
+    }
 
 
 # Debug toolbar config
 INTERNAL_IPS = [
-    '127.0.0.1'
+    '127.0.0.1',
+    'gentle-sands-94947.herokuapp.com'
 ]
