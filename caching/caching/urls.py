@@ -19,7 +19,8 @@ from django.urls import path, include
 from django.conf.urls.static import static
 
 urlpatterns = [
-    path('', include('event.urls')),
+    path('api/', include('event.urls')),
+    path('api/', include('quiz.urls')),
     path('api-auth/', include('rest_framework.urls')),
     path('__debug__/', include('debug_toolbar.urls')),
     path('admin/', admin.site.urls),

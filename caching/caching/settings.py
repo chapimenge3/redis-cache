@@ -42,6 +42,7 @@ INSTALLED_APPS = [
 
     'event',
     'analaytics',
+    'quiz',
 
     'rest_framework',
     'debug_toolbar',
@@ -174,9 +175,15 @@ class AllIPS(list):
     def __contains__(self, item):
         return True
 
+
 INTERNAL_IPS = AllIPS()
 
 
 DEBUG_TOOLBAR_CONFIG = {
     'OBSERVE_REQUEST_CALLBACK': 'analaytics.middleware.observe_request',
+}
+
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 100
 }

@@ -10,19 +10,26 @@ CACHE_TTL = 60 * 15
 def geo_info(ip_address):
     # use cache to store the geo info
     geo_info = cache.get('geo_info_%s' % ip_address)
+    
     if geo_info:
         return geo_info
+    
     try:
+
         url = os.getenv('IPGEOLOCATION_URL')
         params = {
             'ip': ip_address,
             'apiKey': os.getenv('IPGEOLOCATION_APIKEY')
         }
+
         res = requests.get(f'{url}/ipgeo', params=params)
         if res.status_code == 200:
+
             geo_info = res.json()
             cache.set('geo_info_%s' % ip_address, geo_info, CACHE_TTL)
+
             return geo_info
+
     except Exception as e:
         print('Error when getting geo info:', e)
 
